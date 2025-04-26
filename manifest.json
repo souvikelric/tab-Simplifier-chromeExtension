@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "Sample Extension",
+  "version": "1.0.0",
+  "description": "A sample extension that tries to find the number of bear words on a page",
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "permissions": ["tabs"]
+}
