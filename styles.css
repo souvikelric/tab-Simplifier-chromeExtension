@@ -1,0 +1,28 @@
+body {
+  min-width: 180px;
+  overflow: hidden;
+}
+.result {
+  margin-top: 15px;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.tabTitle {
+  border: 1px solid #545252;
+  margin-bottom: 5px;
+  padding: 8px;
+  border-radius: 10px;
+  background-color: rgb(181, 232, 231);
+  color: rgb(14, 13, 13);
+  cursor: pointer;
+
+  &.magenta {
+    background-color: rgb(212, 145, 230) !important;
+  }
+
+  &:hover {
+    background-color: rgb(11, 121, 125);
+    color: white;
+  }
+}

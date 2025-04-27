@@ -6,6 +6,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     "click",
     async () => await removeAllButCurrent(currentTabs, resultDiv)
   );
+  const tabTitles = document.querySelectorAll(".tabTitle");
+  tabTitles.forEach((div) => {
+    div.addEventListener("click", (e) => toggleTabClick(e));
+  });
 });
 
 async function removeAllButCurrent(tabs, res) {
@@ -35,4 +39,8 @@ async function getAndUpdateAllTabs(resDiv) {
       resolve(tabs);
     });
   });
+}
+
+function toggleTabClick(e) {
+  e.target.classList.toggle("magenta");
 }
