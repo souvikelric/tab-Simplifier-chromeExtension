@@ -1,18 +1,26 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const resultDiv = document.querySelector(".result");
   const currentTabs = await getAndUpdateAllTabs(resultDiv);
-  const button = document.querySelector(".all");
-  const selectedBtn = document.querySelector(".selected");
-  button.addEventListener(
-    "click",
-    async () => await removeAllButCurrent(currentTabs, resultDiv)
-  );
+  console.log(currentTabs);
+  const confirmButton = document.querySelector(".confirm");
+
+  confirmButton.addEventListener("click", handleDeletion);
+  async function handleDeletion() {
+    const selectedValue = document.querySelector("#delete-Options");
+    let val = selectedValue.value;
+    console.log(val);
+    if (val === "Remove except current") {
+      await removeAllButCurrent(currentTabs, resultDiv);
+    } else if (val === "Remove Selected") {
+      handleSelected(currentTabs);
+    } else if (val === "Remove except selected") {
+      handleSelected(currentTabs, true);
+    }
+  }
   const tabTitles = document.querySelectorAll(".tabTitle");
   tabTitles.forEach((div) => {
     div.addEventListener("click", (e) => toggleTabClick(e));
   });
-
-  selectedBtn.addEventListener("click", () => handleSelected(currentTabs));
 });
 
 async function removeAllButCurrent(tabs, res) {
@@ -35,6 +43,7 @@ async function getAndUpdateAllTabs(resDiv) {
     chrome.tabs.query({ currentWindow: true }, (tabs) => {
       tabs.forEach((tab) => {
         const div = document.createElement("div");
+        div.id = tab.id;
         div.textContent = tab.title;
         div.classList.add("tabTitle");
         resDiv.appendChild(div);
@@ -48,33 +57,39 @@ function toggleTabClick(e) {
   e.target.classList.toggle("magenta");
 }
 
-function handleSelected(alltabs) {
+function handleSelected(alltabs, rev = false) {
   // sending a message to content.js
   // chrome.tabs.query({ currentWindow: true, active: true }, (tabs) => {
   //   chrome.tabs.sendMessage(tabs[0].id, "This is a message", getRes);
   // });
 
   //removing all selected tabs
-  console.log(alltabs);
   const tabTitles = document.querySelectorAll(".tabTitle");
   let tabTitlesToRemove = Array.from(tabTitles)
-    .filter((tab) => tab.classList.value.includes("magenta"))
-    .map((tab) => tab.textContent);
-
+    .filter((tab) =>
+      rev === false
+        ? tab.classList.value.includes("magenta")
+        : !tab.classList.value.includes("magenta")
+    )
+    .map((tab) => Number(tab.id));
+  console.log(tabTitlesToRemove);
   const resultDiv = document.querySelector(".result");
   resultDiv.innerHTML = "";
-  let TabsToClose = alltabs
-    .filter((tab) => tabTitlesToRemove.includes(tab.title))
-    .map((tab) => tab.id);
-  chrome.tabs.remove(TabsToClose);
-  let tabsToKeep = Array.from(tabTitles).filter(
-    (tab) => !tab.classList.value.includes("magenta")
+  // let TabsToClose = alltabs
+  //   .filter((tab) => tabTitlesToRemove.includes(tab.title))
+  //   .map((tab) => tab.id);
+  chrome.tabs.remove(tabTitlesToRemove);
+  let tabsToKeep = Array.from(tabTitles).filter((tab) =>
+    rev === false
+      ? !tab.classList.value.includes("magenta")
+      : tab.classList.value.includes("magenta")
   );
-  console.log(tabsToKeep);
   tabsToKeep.forEach((tab) => {
     const div = document.createElement("div");
+    div.id = tab.id;
     div.textContent = tab.innerText;
     div.classList.add("tabTitle");
+    div.addEventListener("click", (e) => toggleTabClick(e));
     resultDiv.appendChild(div);
   });
 }

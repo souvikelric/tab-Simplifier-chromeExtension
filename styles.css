@@ -8,6 +8,41 @@ body {
   overflow-y: auto;
 }
 
+.controls {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+}
+
+.confirm {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px;
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+  background-color: rgb(78, 39, 125);
+  color: white;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+#delete-Options {
+  padding: 5px;
+  background-color: rgb(33, 24, 42);
+  color: white;
+  outline: none;
+  border: none;
+}
+
 .tabTitle {
   border: 1px solid #545252;
   margin-bottom: 5px;
