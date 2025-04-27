@@ -1,7 +1,8 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const resultDiv = document.querySelector(".result");
   const currentTabs = await getAndUpdateAllTabs(resultDiv);
-  const button = document.querySelector("button");
+  const button = document.querySelector(".all");
+  const selectedBtn = document.querySelector(".selected");
   button.addEventListener(
     "click",
     async () => await removeAllButCurrent(currentTabs, resultDiv)
@@ -10,6 +11,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   tabTitles.forEach((div) => {
     div.addEventListener("click", (e) => toggleTabClick(e));
   });
+
+  selectedBtn.addEventListener("click", handleSelected);
 });
 
 async function removeAllButCurrent(tabs, res) {
@@ -43,4 +46,16 @@ async function getAndUpdateAllTabs(resDiv) {
 
 function toggleTabClick(e) {
   e.target.classList.toggle("magenta");
+}
+
+function handleSelected() {
+  // sending a message to content.js
+  chrome.tabs.query({ currentWindow: true, active: true }, (tabs) => {
+    chrome.tabs.sendMessage(tabs[0].id, "This is a message", getRes);
+  });
+}
+
+function getRes(res) {
+  const wordDiv = document.querySelector(".wordCount");
+  wordDiv.textContent = res.count;
 }
