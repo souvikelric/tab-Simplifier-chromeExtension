@@ -57,5 +57,5 @@ function handleSelected() {
 
 function getRes(res) {
   const wordDiv = document.querySelector(".wordCount");
-  wordDiv.textContent = res.count;
+  wordDiv.textContent = `${res.count} ${res.totalCount}`;
 }
